@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+RewriteRule ^admin/([^/]+)$ ./index.php?id=$1
+RewriteRule ^user/([^/]+)$ ./user.php?id=$1
+RewriteRule ^login/$ ./app/login.php
+RewriteRule ^admin/accounts/([^/]+)$ ./index.php?id=accounts&acct=$1
