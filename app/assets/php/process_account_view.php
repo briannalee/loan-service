@@ -9,8 +9,11 @@
 session_start();
 $id = $_POST['id'];
 
-include("../app/database_connect.php");
-$dbConnection = InitiateDB();
+spl_autoload_register(function ($class) {
+    include $class . '.class.php';
+});
+
+$dbConnection = Database::connect();
 
 $query="SELECT * FROM accounts,users WHERE accounts.id='$id' AND users.account_id='$id'";
 $result=mysqli_query($dbConnection,$query);
@@ -25,8 +28,10 @@ if($row = mysqli_fetch_assoc($result)) {
         $row['payments'][$i] = $row2;
         $i++;
     }
-    if ($i < 1) $row["payments"] = 0;
-    $row['startdate'] = strtotime($row['startdate']." UTC");
+    if ($i < 1) {
+        $row["payments"] = 0;
+    }
+    $row['loan_start_date'] = strtotime($row['loan_start_date']." UTC");
     echo json_encode($row);
 }else{
     echo 0;

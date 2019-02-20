@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>srtdash - ICO Dashboard</title>
+    <title>Loan Servicing App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
     <link rel="stylesheet" href="../app/assets/css/bootstrap.min.css">
@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="../app/assets/css/slicknav.min.css">
     <!-- amchart css -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <!-- datatable css -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css">
     <!-- others css -->
     <link rel="stylesheet" href="../app/assets/css/typography.css">
     <link rel="stylesheet" href="../app/assets/css/default-css.css">
@@ -39,7 +44,7 @@
         <div class="sidebar-menu">
             <div class="sidebar-header">
                 <div class="logo">
-                    <a href="index.html"><img src="../app/assets/images/icon/logo.png" alt="logo"></a>
+                    <h5><a href="index.html">Loan Service</a></h5>
                 </div>
             </div>
             <div class="main-menu">
@@ -51,106 +56,16 @@
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Accounts</span></a>
                                 <ul class="collapse">
                                     <li class="active"><a href="list_accounts">View Accounts</a></li>
-                                    <li><a href="index2.html">Ecommerce dashboard</a></li>
-                                    <li><a href="index3.html">SEO dashboard</a></li>
+                                    <li><a href="index2.html">Add Account</a></li>
+                                    <li><a href="index3.html">Add Payment</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout-sidebar-left"></i><span>Sidebar
-                                        Types
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout-sidebar-left"></i><span>Admin
                                     </span></a>
                                 <ul class="collapse">
-                                    <li><a href="index.html">Left Sidebar</a></li>
-                                    <li><a href="index3-horizontalmenu.html">Horizontal Sidebar</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-pie-chart"></i><span>Charts</span></a>
-                                <ul class="collapse">
-                                    <li><a href="barchart.html">bar chart</a></li>
-                                    <li><a href="linechart.html">line Chart</a></li>
-                                    <li><a href="piechart.html">pie chart</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-palette"></i><span>UI Features</span></a>
-                                <ul class="collapse">
-                                    <li><a href="accordion.html">Accordion</a></li>
-                                    <li><a href="alert.html">Alert</a></li>
-                                    <li><a href="badge.html">Badge</a></li>
-                                    <li><a href="button.html">Button</a></li>
-                                    <li><a href="button-group.html">Button Group</a></li>
-                                    <li><a href="cards.html">Cards</a></li>
-                                    <li><a href="dropdown.html">Dropdown</a></li>
-                                    <li><a href="list-group.html">List Group</a></li>
-                                    <li><a href="media-object.html">Media Object</a></li>
-                                    <li><a href="modal.html">Modal</a></li>
-                                    <li><a href="pagination.html">Pagination</a></li>
-                                    <li><a href="popovers.html">Popover</a></li>
-                                    <li><a href="progressbar.html">Progressbar</a></li>
-                                    <li><a href="tab.html">Tab</a></li>
-                                    <li><a href="typography.html">Typography</a></li>
-                                    <li><a href="form.html">Form</a></li>
-                                    <li><a href="grid.html">grid system</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>icons</span></a>
-                                <ul class="collapse">
-                                    <li><a href="fontawesome.html">fontawesome icons</a></li>
-                                    <li><a href="themify.html">themify icons</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
-                                    <span>Tables</span></a>
-                                <ul class="collapse">
-                                    <li><a href="table-basic.html">basic table</a></li>
-                                    <li><a href="table-layout.html">table layout</a></li>
-                                    <li><a href="datatable.html">datatable</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="maps.html"><i class="ti-map-alt"></i> <span>maps</span></a></li>
-                            <li><a href="invoice.html"><i class="ti-receipt"></i> <span>Invoice Summary</span></a></li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layers-alt"></i> <span>Pages</span></a>
-                                <ul class="collapse">
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="login2.html">Login 2</a></li>
-                                    <li><a href="login3.html">Login 3</a></li>
-                                    <li><a href="register.html">Register</a></li>
-                                    <li><a href="register2.html">Register 2</a></li>
-                                    <li><a href="register3.html">Register 3</a></li>
-                                    <li><a href="register4.html">Register 4</a></li>
-                                    <li><a href="screenlock.html">Lock Screen</a></li>
-                                    <li><a href="screenlock2.html">Lock Screen 2</a></li>
-                                    <li><a href="reset-pass.html">reset password</a></li>
-                                    <li><a href="pricing.html">Pricing</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-exclamation-triangle"></i>
-                                    <span>Error</span></a>
-                                <ul class="collapse">
-                                    <li><a href="404.html">Error 404</a></li>
-                                    <li><a href="403.html">Error 403</a></li>
-                                    <li><a href="500.html">Error 500</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i> <span>Multi
-                                        level menu</span></a>
-                                <ul class="collapse">
-                                    <li><a href="#">Item level (1)</a></li>
-                                    <li><a href="#">Item level (1)</a></li>
-                                    <li><a href="#" aria-expanded="true">Item level (1)</a>
-                                        <ul class="collapse">
-                                            <li><a href="#">Item level (2)</a></li>
-                                            <li><a href="#">Item level (2)</a></li>
-                                            <li><a href="#">Item level (2)</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Item level (1)</a></li>
+                                    <li><a href="index.html">Manager Admin Users</a></li>
+                                    <li><a href="index3-horizontalmenu.html">My Account</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -160,5 +75,198 @@
         </div>
         <!-- sidebar menu area end -->
         <!-- main content area start -->
-        
-
+        <div class="main-content">
+            <!-- header area start -->
+            <div class="header-area">
+                <div class="row align-items-center">
+                    <!-- nav and search button -->
+                    <div class="col-md-6 col-sm-8 clearfix">
+                        <div class="nav-btn pull-left">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="search-box pull-left">
+                            <form action="#">
+                                <input type="text" name="search" placeholder="Search..." required>
+                                <i class="ti-search"></i>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- profile info & task notification -->
+                    <div class="col-md-6 col-sm-4 clearfix">
+                        <ul class="notification-area pull-right">
+                            <li id="full-view"><i class="ti-fullscreen"></i></li>
+                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
+                                    <span>2</span>
+                                </i>
+                                <div class="dropdown-menu bell-notify-box notify-box">
+                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+                                    <div class="nofity-list">
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+                                            <div class="notify-text">
+                                                <p>You have Changed Your Password</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
+                                            <div class="notify-text">
+                                                <p>New Commetns On Post</p>
+                                                <span>30 Seconds ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
+                                            <div class="notify-text">
+                                                <p>Some special like you</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
+                                            <div class="notify-text">
+                                                <p>New Commetns On Post</p>
+                                                <span>30 Seconds ago</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
+                                            <div class="notify-text">
+                                                <p>Some special like you</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+                                            <div class="notify-text">
+                                                <p>You have Changed Your Password</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+                                            <div class="notify-text">
+                                                <p>You have Changed Your Password</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown">
+                                <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
+                                <div class="dropdown-menu notify-box nt-enveloper-box">
+                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+                                    <div class="nofity-list">
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img1.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Hey I am waiting for you...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img2.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">When you can connect with me...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img3.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">I missed you so much...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img4.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Your product is completely Ready...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img2.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Hey I am waiting for you...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img1.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Hey I am waiting for you...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="../app/assets/images/author/author-img3.jpg" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Hey I am waiting for you...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="settings-btn">
+                                <i class="ti-settings"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- header area end -->
+            <!-- page title area start -->
+            <div class="page-title-area">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+                            <h4 class="page-title pull-left">Dashboard</h4>
+                            <ul class="breadcrumbs pull-left">
+                                <li><a href="index.html">Home</a></li>
+                                <li><span>Dashboard</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <div class="user-profile pull-right">
+                            <img class="avatar user-thumb" src="../app/assets/images/author/avatar.png" alt="avatar">
+                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Message</a>
+                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#" id="logout" onclick="Logout();">Log Out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- page title area end -->
+            <div class="main-content-inner">

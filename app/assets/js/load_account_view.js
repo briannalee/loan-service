@@ -9,25 +9,134 @@ function LoadAccountView(id) {
         xhr = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             $("#progressIndicator").css("visibility", "hidden");
             if (xhr.response !== 0) {
+                // receive data from mysql
                 var data = JSON.parse(xhr.responseText);
 
-                var r = parseFloat(data["rate"]);
-                var P = parseFloat(data["loan_amount"]);
-                var t = parseInt(data["length"]);
-                //var A = P*(1+(r/100)*(t/12));
-                var A = calculateAccrual(r,t,P) + P;
-                var payment = calculateMonthlyPayment(r,t,P);
+                // parse the needed variables into floats/ints 
+                // do maths as needed to calculate payment amount, accrual, etc
+                var r = parseFloat(data["rate"]); // rate
+                var P = parseFloat(data["loan_amount"]); // principal
+                var t = parseInt(data["length"]); // loan length in months
+                var A = calculateAccrual(r, t, P) + P; // accrual
+                var payment = calculateMonthlyPayment(r, t, P); // monthly payment
+                var startDateTimestamp = data["loan_start_date"]; // loan start date
+                var startDate = new Date(startDateTimestamp * 1000); // convert loan start date to something we can use
 
-                var monthlyPayment = formatMoney(round(payment,2));
-                var currentBalance = formatMoney(round(parseFloat(data["current_balance"]),2));
-                var startingBalance = formatMoney(round(parseFloat(data["loan_amount"]),2));
-                var accrual = formatMoney(round(A,2));
-                var startDate = data["startdate"]
 
+                // format our numbers into pretty display formats    
+                startDate = convertDateToUTC(startDate); // convert the loan start date to a useable date
+                var monthlyPayment = formatMoney(round(payment, 2));
+                var currentBalance = formatMoney(round(parseFloat(data["current_balance"]), 2));
+                var startingBalance = formatMoney(round(parseFloat(data["loan_amount"]), 2));
+                var accrual = formatMoney(round(A, 2));
+
+                // init a few variables for use in our calculations below
+                var tableBody = ""; // where our amortization table will go
+                var previousBalance = P; // var to store the remaining principal
+                var superscript = ""; // var to denote a special payemnt (adjusted, future, etc)
+                var paymentNumber = 1; // number of payment, predicted or actual payment
+                var paymentAmount = payment; // var to store the payment amount made
+                var unpaidInterest = 0; // var to store the total amount of unpaid interest
+                var rowStyleClass = ""; // var to denote the style class used for this row
+                var paymentIndex = 0; // if working with an actual payment, the index of the actual payment
+                var actualPaymentLength = 0; // length of the actual payment array
+                var isActualPayment = false; // is this an actual payment, or predicted payment
+                var paymentDate = 0;
+
+                // check if we have any actual payments to process 
+                if (data["payments"] !== 0) {
+                    actualPaymentLength = data["payments"].length;
+                }
+
+
+                while (round(previousBalance, 2) > 0.001) {
+                    // suggest payment is regular payment + any unpaid accrued interest
+                    paymentAmount = payment + unpaidInterest;
+                    var actualPayment = payment;
+                    //Are we working with a real payment?
+                    if (actualPaymentLength > 0 && paymentIndex < actualPaymentLength) {
+                        isActualPayment = true;
+                        actualPayment = parseFloat(data['payments'][paymentIndex]["payment_amount"]);
+                        paymentDate = convertDateToUTC(new Date(data['payments'][paymentIndex]["date"] * 1000));
+                        paymentIndex++;
+                        rowStyleClass = "text-light bg-success";
+                    } else {
+                        paymentDate = addMonths(convertDateToUTC(new Date(data["loan_start_date"] * 1000)), paymentNumber);
+                        isActualPayment = false;
+                        rowStyleClass = "bg-light text-secondary";
+                        actualPayment = paymentAmount;
+                    }
+
+                    // has the payment been missed?
+                    if (paymentDate < Date.now() && !isActualPayment) {
+                        actualPayment = 0;
+                        rowStyleClass = "bg-danger text-light";
+                    }
+
+                    var leftoverPayment = actualPayment;
+                    //Pay off accrued interest first
+                    if (unpaidInterest > 0) {
+                        leftoverPayment = actualPayment - unpaidInterest;
+                        if (unpaidInterest > actualPayment) {
+                            leftoverPayment = 0;
+                            unpaidInterest -= actualPayment;
+                        }else{
+                            unpaidInterest -= actualPayment;
+                        }
+                    }
+                    if (unpaidInterest < 0)
+                        unpaidInterest = 0;
+
+                    var interestPayment = round(previousBalance * ((r / 100) / 12), 2);
+                    var principalPayment = round(leftoverPayment - interestPayment, 2);
+
+                    if (principalPayment < 0) {
+                        principalPayment = 0;
+                    }
+                    if (parseFloat(principalPayment) > parseFloat(previousBalance)) {
+                        paymentAmount = round(payment - (parseFloat(principalPayment) - parseFloat(previousBalance)), 2);
+                        principalPayment = round(principalPayment - (parseFloat(principalPayment) - parseFloat(previousBalance)), 2);
+                        superscript = "**";
+                        if (!isActualPayment) {
+                            actualPayment = paymentAmount;
+                        }
+                    }
+
+                    previousBalance = round(previousBalance - principalPayment, 2);
+
+                    // how much did we actually pay in interest?
+                    var interestPaid = actualPayment - principalPayment;
+                    if (interestPaid < 0)
+                        interestPaid = 0;
+
+
+                    if (parseFloat(leftoverPayment) < parseFloat(interestPayment)) {
+                        alert("Prevoius Interest: " + unpaidInterest + " | Adding: " + (interestPayment - actualPayment))
+                        unpaidInterest = unpaidInterest + (interestPayment - actualPayment);
+                    }
+
+                    tableBody = tableBody + "<tr class='" + rowStyleClass + "'><td>" +
+                            paymentNumber + superscript + "</td><td>" +
+                            round(paymentAmount, 2) + "</td><td>" +
+                            round(actualPayment, 2) + "</td><td>" +
+                            round(interestPayment, 2) + "</td><td>" +
+                            round(interestPaid, 2) + "</td><td>" +
+                            principalPayment + "</td><td>" +
+                            previousBalance + "</td><td>" +
+                            round(unpaidInterest, 2) + "</td><td>" +
+                            paymentDate + "</td></tr>";
+                    paymentNumber++;
+
+                    if (paymentNumber > 1000)
+                        break;
+                }
+
+                // fill in the data into our display areas
+                $("#tableBody").html(tableBody);
                 $("#lastName").text(data["last_name"]);
                 $("#firstName").text(data["first_name"]);
                 $("#currentBalance").text(currentBalance);
@@ -39,117 +148,48 @@ function LoadAccountView(id) {
                 $("#monthlyPayment").text(monthlyPayment);
                 $("#startDate").text(startDate);
 
-
-                var tableBody = "";
-                var previousBalance = P;
-                var alpha = "";
-                var i = 1;
-                var paymentAmount = payment;
-                var unpaidInterest = 0;
-                var rowClass = "";
-
-
-                var paymentIndex = 0;
-                var length = 0;
-                var isReal = false;
-                if (data["payments"] !== 0) {
-                    length = data["payments"].length;
-                }
-                var startDateTimestamp = new Date( data["startdate"]*1000);
-                startDateTimestamp = convertDateToUTC(startDateTimestamp);
-                while(round(previousBalance,2) > 0.001) {
-                    alert("running");
-                    var actualPayment = payment;
-                    //Are we working with a real payment?
-                    if (length > 0 && paymentIndex < length) {
-                        isReal = true;
-                        actualPayment = parseFloat(data['payments'][paymentIndex]["amount"]);
-                        paymentDate = convertDateToUTC(new Date(data['payments'][paymentIndex]["date"]*1000));
-                        paymentIndex++;
-                        rowClass = "text-light bg-success";
-                    }else {
-                        paymentDate = addMonths(convertDateToUTC(new Date( data["startdate"]*1000)),i);
-                        isReal = false;
-                        rowClass = "bg-light";
-                    }
-                    var leftoverPayment = actualPayment;
-                    //Pay off accrued interest first
-                    if (unpaidInterest > 0) {
-                        leftoverPayment = actualPayment - unpaidInterest;
-                        unpaidInterest -= leftoverPayment;
-                    }
-                    if (unpaidInterest < 0) unpaidInterest = 0;
-
-                    if (leftoverPayment < 0) leftoverPayment = 0;
-                    var interestPayment = round(previousBalance * ((r/100)/12),2);
-                    var principalPayment = round(leftoverPayment - interestPayment,2);
-                    if (principalPayment < 0) principalPayment = 0;
-                    if (parseFloat(principalPayment) >  parseFloat(previousBalance)) {
-                        paymentAmount = round(payment - (parseFloat(principalPayment) - parseFloat(previousBalance)),2);
-                        principalPayment = round(principalPayment - (parseFloat(principalPayment) - parseFloat(previousBalance)),2);
-                        alpha = "**";
-                        if (!isReal) {
-                            actualPayment = paymentAmount;
-                        }
-                    }
-
-
-                    if (parseFloat(leftoverPayment) < parseFloat(interestPayment)) {
-                        unpaidInterest = unpaidInterest + (interestPayment - actualPayment);
-                    }
-
-                    previousBalance = round(previousBalance - principalPayment,2);
-                    tableBody = tableBody + "<tr class='" + rowClass + "'><td>" + i + alpha + "</td><td>" + round(paymentAmount,2) + "</td><td>" + round(actualPayment,2) + "</td><td>"+ interestPayment +"</td><td>" + principalPayment + "</td><td>"+ previousBalance +"</td><td>" + round(unpaidInterest,2) + "</td><td>"+ paymentDate + "</td></tr>";
-                    i++;
-
-                    if (i>1000) break;
-                }
-
-                $("#tableBody").html(tableBody);
-                alert(tableBody);
-            }
-            else {
-                md.showNotification('top','center','Sorry, account not found!','danger');
+                // activate the account detail tab
+                activateTab("account_detail")
+            } else {
+                // oops, we couldnt find this account. Display an error
+                md.showNotification('top', 'center', 'Sorry, account not found!', 'danger');
             }
 
         }
     };
 
     var data = "id=" + id;
-    xhr.open("POST", "../app/process_account_view.php", true);
+    xhr.open("POST", "../app/assets/php/process_account_view.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send(data);
-    $("#firstName").text = "Hiii";
-
-
 }
 
 
 
-function calculateMonthlyPayment(interestRate,loanTerm,principalAmount) {
-    var i = interestRate/100.0/12.0
-    var tau = 1.0 + i
-    var tauToTheN = Math.pow(tau, loanTerm ) ;
-    var magicNumber = tauToTheN * i / (tauToTheN - 1.0 )
-    return principalAmount * magicNumber
+function calculateMonthlyPayment(interestRate, loanTerm, principalAmount) {
+    var i = interestRate / 100.0 / 12.0;
+    var tau = 1.0 + i;
+    var tauToTheN = Math.pow(tau, loanTerm);
+    var magicNumber = tauToTheN * i / (tauToTheN - 1.0);
+    return principalAmount * magicNumber;
 }
 
 
-function calculateAccrual(interestRate,loanTerm,principalAmount) {
-    var i = interestRate/100.0/12.0
-    var tau = 1.0 + i
-    var tauToTheN = Math.pow(tau, loanTerm ) ;
-    var magicNumber = tauToTheN * i / (tauToTheN - 1.0 )
-    return principalAmount * magicNumber * loanTerm - principalAmount
+function calculateAccrual(interestRate, loanTerm, principalAmount) {
+    var i = interestRate / 100.0 / 12.0;
+    var tau = 1.0 + i;
+    var tauToTheN = Math.pow(tau, loanTerm);
+    var magicNumber = tauToTheN * i / (tauToTheN - 1.0);
+    return principalAmount * magicNumber * loanTerm - principalAmount;
 }
 
 
 function formatMoney(num) {
-    return "$" + num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+    return "$" + num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 }
 
 function round(value, decimals) {
-    return Number(Math.round(value +'e'+ decimals) +'e-'+ decimals).toFixed(decimals);
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals);
 }
 
 function createDateAsUTC(date) {
@@ -163,8 +203,13 @@ function convertDateToUTC(date) {
 function addMonths(date, months) {
     var d = date.getDate();
     date.setMonth(date.getMonth() + +months);
-    if (date.getDate() != d) {
+    if (date.getDate() !== d) {
         date.setDate(0);
     }
     return date;
 }
+
+function activateTab(tab) {
+    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+}
+;

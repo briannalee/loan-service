@@ -7,6 +7,7 @@ function Login() {
     $("#progressIndicator").css("visibility", "visible");
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
+    var usersTable = 'admin_users';
     var xhr;
     if (window.XMLHttpRequest) { // Mozilla, Safari, ...
         xhr = new XMLHttpRequest();
@@ -16,7 +17,7 @@ function Login() {
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            if (xhr.responseText == 1) {
+            if (xhr.responseText === 'true') {
                 window.location.replace("../index.php");
             }else{
                 $("#progressIndicator").css("visibility", "hidden");
@@ -25,10 +26,9 @@ function Login() {
 
         }
     }
-
     var data = "email=" + email;
     data = data + "&password=" + password;
-    xhr.open("POST", "../app/process_login.php", true);
+    xhr.open("POST", "../app/assets/php/process_login.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send(data);
 }

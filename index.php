@@ -1,6 +1,12 @@
 <?php
 session_start();
-include("app/authentication.php");
+
+spl_autoload_register(function ($class) {
+    include 'app/assets/php/' . $class . '.class.php';
+});
+
+// login path and home path are passed to the auth script
+Auth::authenticate('/loan-service/loan-service/login/','admin/dash');
 
 $page = 'dash';
 if(isset($_GET['id'])) {
