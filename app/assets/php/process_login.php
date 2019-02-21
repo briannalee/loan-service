@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Brianna
- * Date: 1/16/2019
- * Time: 11:07 AM
- */
+
+namespace LoanService;
+
 session_start();
-spl_autoload_register(function ($class) {
-    include $class . '.class.php';
-});
+
+require_once 'autoloader.php';
 
 $email = $_POST['email'];
 $password = $_POST['password'];

@@ -1,24 +1,26 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace LoanService;
 
 /**
- * Description of auth
+ * Provides user authentication
  *
  * @author brianna
  */
 class Auth {
 
     /**
-     * Authenticates the user
+     * authenticate
+     * 
+     * Authenticates that the user is logged in, and session is not expired
+     * 
+     * @param string $loginPath URL to the login page
+     * @param string $homePath URL to the home page
+     * @param int $timeout Session timeout in seconds, default 30 min
      */
-    public function authenticate($loginPath,$homePath) {
+    public static function authenticate($loginPath,$homePath, $timeout = 1800) {
         // first check if the session has expired
-        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 1800)) {
+        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout)) {
             // last request was more than 30 minutes ago
             session_unset();     // unset $_SESSION variable for the run-time 
             session_destroy();   // destroy session data in storage
@@ -39,7 +41,15 @@ class Auth {
         }
     }
 
-    public function login($email,$password, $userTable) {
+    /**
+     * Logs in a user with the specified credentials, looking up from specified
+     * table
+     * @param type $email
+     * @param type $password
+     * @param type $userTable
+     * @return boolean
+     */
+    public static function login($email,$password, $userTable) {
 
         $dbConnection = Database::connect();
 

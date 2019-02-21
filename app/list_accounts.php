@@ -93,6 +93,10 @@
                                                     <td id="currentBalance">---</td>
                                                 </tr>
                                                 <tr>
+                                                    <td>Rate</td>
+                                                    <td id="rate">---</td>
+                                                </tr>
+                                                <tr>
                                                     <td>Monthly Payment</td>
                                                     <td id="monthlyPayment">---</td>
                                                 </tr>
