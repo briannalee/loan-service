@@ -11,7 +11,7 @@ include 'autoloader.php';
 // Which account id are we looking up
 $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
 
-$account = new User(2);
+$account = new User(1);
 echo $account->get_loan_amount();
 echo $account->get_first_name();
 

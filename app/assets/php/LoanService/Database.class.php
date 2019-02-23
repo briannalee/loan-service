@@ -9,10 +9,10 @@ namespace LoanService;
  */
 class Database {
 
-    public const SERVERNAME = 'localhost';
-    public const USERNAME = 'database_user';
-    public const PASSWORD = 'Yba4kXS8h$Ip#19D89$5%Wd1AM4kl!2zmzo2';
-    public const DATABASE = 'loan-service';
+    const SERVERNAME = 'localhost';
+    const USERNAME = 'database_user';
+    const PASSWORD = 'Yba4kXS8h$Ip#19D89$5%Wd1AM4kl!2zmzo2';
+    const DATABASE = 'loan-service';
 
     /**
      * Returns a connection to the mysql database
