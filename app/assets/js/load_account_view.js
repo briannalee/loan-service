@@ -11,23 +11,24 @@ function LoadAccountView(id) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-            alert(xhr.response);
+           
             $("#progressIndicator").css("visibility", "hidden");
             if (xhr.response !== 0) {
+                alert(xhr.response);
                 var data = JSON.parse(xhr.responseText);
                 // fill in the data into our display areas
                 $("#tableBody").html(data["tableBody"]);
-                $("#lastName").text(data["last_name"]);
+                //("#lastName").text(data["last_name"]);
                 $("#firstName").text(data["first_name"]);
-                $("#currentBalance").text(formatMoney(data["currentBalance"]));
-                $("#startingBalance").text(formatMoney(data["startingBalance"]));
-                $("#email").text(data["email"]);
-                $("#phone").text(data["phone"]);
-                $("#lastPayment").text(data["lastpayment"]);
-                $("#accrual").text(formatMoney(data["accrual"]));
-                $("#monthlyPayment").text(formatMoney(data["monthlyPayment"]));
-                $("#startDate").text(data["startDate"]);
-                $("#rate").text(data["rate"]);
+                //$("#currentBalance").text(formatMoney(data["currentBalance"]));
+                //$("#startingBalance").text(formatMoney(data["startingBalance"]));
+                //$("#email").text(data["email"]);
+                //$("#phone").text(data["phone"]);
+                //$("#lastPayment").text(data["lastpayment"]);
+                //$("#accrual").text(formatMoney(data["accrual"]));
+                //$("#monthlyPayment").text(formatMoney(data["monthlyPayment"]));
+                //$("#startDate").text(data["startDate"]);
+                //$("#rate").text(data["rate"]);
 
                 // activate the account detail tab
                 activateTab("account_detail");

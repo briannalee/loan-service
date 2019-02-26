@@ -11,9 +11,38 @@ include 'autoloader.php';
 // Which account id are we looking up
 $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
 
-$account = new User(1);
-echo $account->get_loan_amount();
-echo $account->get_first_name();
+$account = new User(2);
+//echo $account->get_loan_principal();
+//echo $account->get_loan_monthly_payment();
+//echo $account->get_loan_start_date()->format("m-d-Y") . " | ";
+//echo $account->get_payment_date(1)->format("m-d-Y");
+$payments = $account->get_amortization()->get_payment_array($account);//$amortization->generate_projected_payments($account); //$amortization->get_payment_array($account);
+
+$payment_index = 1;
+$return_data = [];
+$tableBody = 0;
+
+$return_data['first_name'] = $account->get_first_name();
+
+foreach ($payments as $payment) {
+
+    $tableBody = $tableBody . 
+                "<tr class='". $payment->get_payment_class() ."'><td>" .
+                $payment_index . "</td><td>" .
+                round($payment->get_desired_payment(), 2) . "</td><td>" .
+                round($payment->get_payment_amount(), 2) . "</td><td>" .
+                round($payment->get_desired_interest(),2) . "</td><td>" .
+                round($payment->get_payment_interest(),2) . "</td><td>" .
+                round($payment->get_payment_principal(),2) . "</td><td>" .
+                round($payment->get_ending_principal(),2) . "</td><td>" .
+                0 . "</td><td>" .
+                $payment->get_payment_date()->format("m-d-Y") . "</td></tr>";
+    
+$payment_index++;
+    //echo " || " . $value['payment_date']->format("m-d-Y") . " | " . $value['payment_amount'];
+}
+$return_data['tableBody'] = $tableBody;
+echo json_encode($return_data);
 
 die();
 
