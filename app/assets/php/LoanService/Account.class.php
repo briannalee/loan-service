@@ -22,6 +22,8 @@ class Account {
     private $amortization;
     private $missed_payments;
     private $current_missed_payments;
+    private $current_balance;
+    private $late_charge;
     
     /**
      * 
@@ -47,6 +49,8 @@ class Account {
             $this->loan_accrual = $this->calculate_accrual($this->loan_rate, $this->loan_term, $this->loan_principal);
             $this->account_id = $id;
             $this->amortization = new Amortization($this);
+            $this->current_balance = $account_info['loan_amount'];
+            $this->loan_last_payment = $this->loan_start_date;
         } else {
             echo "Error! Account not found: $id";
         }
@@ -57,6 +61,22 @@ class Account {
 
     public function get_loan_principal() {
         return $this->loan_principal;
+    }
+    
+    public function get_late_charge() {
+        return $this->late_charge;
+    }
+
+    public function get_current_balance() {
+        return $this->current_balance;
+    }
+
+    public function set_current_balance(float $balance) {
+        $this->current_balance = $balance;
+    }
+
+    public function set_last_payment(DateTime $payment_date) {
+        $this->loan_last_payment = $payment_date;
     }
 
     public function get_loan_rate() {
@@ -82,29 +102,29 @@ class Account {
     public function get_loan_payment() {
         return $this->loan_monthly_payment;
     }
-    
+
     public function get_account_id() {
         return $this->account_id;
     }
-    
+
     public function get_missed_payments() {
         return $this->missed_payments;
     }
-    
+
     public function get_current_missed_payments() {
         return $this->current_missed_payments;
     }
-    
+
     public function add_missed_payment() {
         $this->current_missed_payments++;
         $this->missed_payments++;
     }
-    
+
     public function remove_missed_payment() {
         $this->current_missed_payments--;
     }
-    
-    public function get_amortization() : Amortization {
+
+    public function get_amortization(): Amortization {
         return $this->amortization;
     }
 
@@ -144,4 +164,5 @@ class Account {
 
         return $date;
     }
+
 }

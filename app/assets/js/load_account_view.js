@@ -18,17 +18,19 @@ function LoadAccountView(id) {
                 var data = JSON.parse(xhr.responseText);
                 // fill in the data into our display areas
                 $("#tableBody").html(data["tableBody"]);
-                //("#lastName").text(data["last_name"]);
+                $("#lastName").text(data["last_name"]);
                 $("#firstName").text(data["first_name"]);
-                //$("#currentBalance").text(formatMoney(data["currentBalance"]));
-                //$("#startingBalance").text(formatMoney(data["startingBalance"]));
-                //$("#email").text(data["email"]);
-                //$("#phone").text(data["phone"]);
-                //$("#lastPayment").text(data["lastpayment"]);
-                //$("#accrual").text(formatMoney(data["accrual"]));
-                //$("#monthlyPayment").text(formatMoney(data["monthlyPayment"]));
-                //$("#startDate").text(data["startDate"]);
-                //$("#rate").text(data["rate"]);
+                $("#currentBalance").text(formatMoney(data["current_balance"]));
+                $("#startingBalance").text(formatMoney(data["starting_balance"]));
+                $("#email").text(data["email"]);
+                $("#phone").text(data["phone"]);
+                $("#lastPayment").text(data["last_payment"]);
+                $("#accrual").text(formatMoney(data["accrual"]));
+                $("#monthlyPayment").text(formatMoney(data["monthly_payment"]));
+                $("#startDate").text(data["start_date"]);
+                $("#rate").text(data["rate"]);
+                $("#missed_payments").text(data["missed_payments"]);
+                $("#late_charges").text(data["late_charges"]);
 
                 // activate the account detail tab
                 activateTab("account_detail");

@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace LoanService;
 
 use DateTime;
@@ -17,6 +11,10 @@ use DateTime;
  */
 class Payment {
 
+    /**********************************************************************
+     * BEGIN INTERNAL CLASS VARIABLES
+     **********************************************************************/
+    
     private $payment_date;
     private $payment_amount;
     private $payment_towards_interest = null;
@@ -27,18 +25,44 @@ class Payment {
     private $payment_class = 0;
     private $is_principal_payment = 0;
     private $desired_payment;
+    private $due_date;
+    
+    /**********************************************************************
+     * END INTERNAL CLASS VARIABLES
+     **********************************************************************/
 
+    /**
+     * Class constructor
+     * 
+     * @param float $amount Payment Amount
+     * @param DateTime $date Payment Date
+     * @param \LoanService\Account $account Account class this payment is for
+     */
     public function __construct(float $amount, DateTime $date, Account $account) {
         $this->payment_amount = $amount;
         $this->payment_date = $date;
         $this->account = $account;
         $this->desired_payment = $account->get_loan_payment();
+        $this->due_date = $date;
     }
 
+    
+    /**********************************************************************
+     * BEGIN ACCESSOR METHODS
+     **********************************************************************/
+    
     public function get_payment_date() {
         return $this->payment_date;
     }
     
+    public function get_due_date() {
+        return $this->due_date;
+    }
+    
+    public function set_due_date(DateTime $due_date) {
+        $this->due_date = $due_date;
+    }
+
     public function get_desired_payment() {
         return $this->desired_payment;
     }
@@ -50,66 +74,11 @@ class Payment {
     public function get_desired_interest() {
         return $this->desired_interest_payment;
     }
-    
+
     public function get_is_principal_payment() {
         return $this->is_principal_payment;
     }
-
-    public function get_payment_class() {
-        switch ($this->payment_class) {
-            case 0:
-                return "table-success";
-            case 1:
-                return "table-danger";
-            case 2:
-                return "table-light";
-            case 3:
-                return "table-warning";
-        }
-    }
     
-    public function get_payment_class_as_int() {
-        return $this->payment_class;
-    }
-    
-    public function set_payment_class(string $payment_type) {
-        switch ($payment_type) {
-            case 'regular':
-                $this->payment_class = 0;
-                break;
-            case 'missed':
-                $this->payment_class = 1;
-                break;
-            case 'projected':
-                $this->payment_class = 2;
-                break;
-            case 'insufficient':
-                $this->payment_class = 3;
-                break;
-        }
-    }
-
-    /**
-     * Computes the interest, principal payment amounts, and ending principal
-     * 
-     * @param float $principal
-     * @param bool $is_principal_payment
-     */
-    public function compute_payment(float $principal, bool $is_principal_payment) {
-        $this->is_principal_payment = $is_principal_payment;
-        if ($is_principal_payment) {
-            $this->payment_towards_interest = 0;
-            $this->payment_towards_principal = $this->payment_amount;
-            $this->ending_principal = $principal -= $this->payment_towards_principal;
-        } else {
-            $payment_info = $this->calculate_payment($principal, $this->payment_amount, $this->account->get_loan_rate());
-            $this->payment_amount = $payment_info['amount'];
-            $this->payment_towards_principal = $payment_info['principal'];
-            $this->payment_towards_interest = $payment_info['interest'];
-            $this->ending_principal = $principal - $this->payment_towards_principal;
-        }
-    }
-
     public function set_payment_towards_principal($payment_towards_principal) {
         $this->payment_towards_principal = $payment_towards_principal;
     }
@@ -134,6 +103,78 @@ class Payment {
         return $this->ending_principal;
     }
 
+
+    /*****************************************
+     * Begin Payment 'Class' Accessor Methods
+     *****************************************/
+    
+    public function get_payment_class() {
+        switch ($this->payment_class) {
+            case 0:
+                return "table-success";
+            case 1:
+                return "table-danger";
+            case 2:
+                return "table-light";
+            case 3:
+                return "table-warning";
+        }
+    }
+
+    public function get_payment_class_as_int() {
+        return $this->payment_class;
+    }
+
+    public function set_payment_class(string $payment_type) {
+        switch ($payment_type) {
+            case 'regular':
+                $this->payment_class = 0;
+                break;
+            case 'missed':
+                $this->payment_class = 1;
+                break;
+            case 'projected':
+                $this->payment_class = 2;
+                break;
+            case 'insufficient':
+                $this->payment_class = 3;
+                break;
+        }
+    }
+    
+    /*****************************************
+     * End Payment 'Class' Accessor Methods
+     *****************************************/
+    
+    /**********************************************************************
+     * END GET & SET METHODS
+     **********************************************************************/
+    
+    /**********************************************************************
+     * BEGIN CLASS METHODS
+     **********************************************************************/
+    
+    /**
+     * Computes the interest, principal payment amounts, and ending principal
+     * 
+     * @param float $principal
+     * @param bool $is_principal_payment
+     */
+    public function compute_payment(float $principal, bool $is_principal_payment) {
+        $this->is_principal_payment = $is_principal_payment;
+        if ($is_principal_payment) {
+            $this->payment_towards_interest = 0;
+            $this->payment_towards_principal = $this->payment_amount;
+            $this->ending_principal = $principal -= $this->payment_towards_principal;
+        } else {
+            $payment_info = $this->calculate_payment($principal, $this->payment_amount, $this->account->get_loan_rate());
+            $this->payment_amount = $payment_info['amount'];
+            $this->payment_towards_principal = $payment_info['principal'];
+            $this->payment_towards_interest = $payment_info['interest'];
+            $this->ending_principal = $principal - $this->payment_towards_principal;
+        }
+    }
+
     /**
      * Returns an array containing the interest and principal payment amounts
      * base on the balance given
@@ -149,7 +190,7 @@ class Payment {
 
         if ($payment_amount < $this->desired_interest_payment) {
             $interest_payment = $payment_amount;
-            if ($payment_amount > 0){
+            if ($payment_amount > 0) {
                 $this->set_payment_class('insufficient');
                 $this->account->add_missed_payment();
             }
@@ -179,7 +220,7 @@ class Payment {
      * @param float $payment_amount
      * @return Array Adjusted principal payment and total payment amount, array keys 'amount' & 'principal'
      */
-    private function calculate_overpayment(float $principal, float $principal_payment, float $payment_amount) {
+    private function calculate_overpayment(float $principal, float $principal_payment, float $payment_amount) : Array {
         // Is our payment amount higher than what we owe?
         if ($principal_payment > $principal) {
             // We need to reduce our payment amount to match
@@ -196,5 +237,9 @@ class Payment {
             return $payment_adjusted;
         }
     }
+    
+    /**********************************************************************
+     * END CLASS METHODS
+     **********************************************************************/
 
 }

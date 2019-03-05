@@ -4,7 +4,7 @@
     <div class="col-12 mt-5">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Data Table Dark</h4>
+                <h4 class="header-title">Account View</h4>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Accounts</a>
@@ -67,8 +67,12 @@
                                                     <td id="accrual">---</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Accrued Interest</td>
-                                                    <td id="accruedInterest">---</td>
+                                                    <td>Missed Payments</td>
+                                                    <td id="missed_payments">---</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Current Late Charges</td>
+                                                    <td id="late_charges">---</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -139,7 +143,7 @@
                                                 Balance
                                             </th>
                                             <th>
-                                                Unpaid Accrued Interest
+                                                Payment Due
                                             </th>
                                             <th>
                                                 Payment Date

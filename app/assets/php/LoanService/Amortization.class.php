@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace LoanService;
 
 use DateTime;
@@ -18,18 +12,28 @@ use DateTimeZone;
  */
 class Amortization {
 
+    /**********************************************************************
+     * BEGIN INTERNAL CLASS VARIABLES
+     **********************************************************************/
     private $account;
-    private $interest_due;
-    private $interest_paid;
 
+    /**********************************************************************
+     * END INTERNAL CLASS VARIABLES
+     **********************************************************************/
+    
+    /**
+     * Class constructor
+     * 
+     * @param \LoanService\Account $account Account class
+     */
     public function __construct(Account $account) {
         $this->account = $account;
     }
 
-    public function currently_owe_interest() {
-        return $this->interest_due >= $this->interest_paid ? true : false;
-    }
-
+    /**********************************************************************
+     * BEGIN CLASS METHODS
+     **********************************************************************/
+    
     /**
      * Returns an array containing all the payments, real and projected
      * @return array Containing all payments
@@ -39,11 +43,16 @@ class Amortization {
         $real_payments = $this->get_real_payments();
         if (count($real_payments) > 0) {
             $ending_principal = $real_payments[count($real_payments) - 1]->get_ending_principal();
+            $this->account->set_current_balance($ending_principal);
+            $this->account->set_last_payment($real_payments[count($real_payments) - 1]->get_payment_date());
         }
 
         // Generate projected payments
-        $projected_payments = $this->generate_projected_payments($ending_principal, $this->account->get_loan_start_date());
+        $projected_payments = $this->generate_projected_payments($ending_principal, 
+                $this->account->get_loan_start_date());
 
+        $payments = $projected_payments;
+        
         // Remove payments that are duplicates, if real payments exist
         if (count($real_payments) > 0) {
             $payments = $this->remove_duplicate_payments($real_payments, $projected_payments, 14);
@@ -54,12 +63,11 @@ class Amortization {
 
         // Find missed payments
         $payments = $this->find_missed_payments($payments);
-        
+
         // Reprocess our payments, based on missed payments
         $payments = $this->reprocess_payments($payments);
 
-        // Add the remaining projected payments if existing ones are 
-        // not enough to pay off the loan
+        // Add the remaining projected payments if needed
         $ending_principal = $payments[count($payments) - 1]->get_ending_principal();
 
         if ($ending_principal > 0.01) {
@@ -89,12 +97,9 @@ class Amortization {
         $last_payment_date->modify('+' . (min($payment_day, $this->account->get_loan_start_date()->format('t')) - 1) . ' days');
 
 
-
-        //if ($last_payment_date > new DateTime("now", new DateTimeZone("UTC"))) {
-        //$payment_index = 0;
-        //}
         while ($principal > 0.01) {
             $payment_date = $this->add_months($last_payment_date, $payment_index);
+            
             $payment = new Payment($payment_amount, $payment_date, $this->account);
             $payment->compute_payment($principal, false);
             $payment->set_payment_class('projected');
@@ -148,12 +153,15 @@ class Amortization {
                 continue;
             }
 
+            //Set the payment due date to the projected payment date
+            $closest_payment->set_due_date($projected_payment_date);
+            
             // Is the payment within our payment window?
             $difference = $projected_payment_date->diff($closest_payment->get_payment_date())->format("%r%a");
             if ($difference > $payment_window) {
                 continue;
             }
-
+            
             // Replace the projected payment with our real payment
             $key = array_search($closest_payment, $real_payments);
             $projected_payments[$projected_key] = $real_payments[$key];
@@ -163,9 +171,9 @@ class Amortization {
         }
 
         // Merge in any other payments, including principal only payments
-        $projected_payments = array_merge($projected_payments, $real_payments);
+        $merged_payments = array_merge($projected_payments, $real_payments);
 
-        return $projected_payments;
+        return $merged_payments;
     }
 
     /**
@@ -206,13 +214,12 @@ class Amortization {
      */
     private function find_missed_payments(Array $payments): Array {
         $now = new DateTime("now", new DateTimeZone("UTC"));
-        $principal = $this->account->get_loan_principal();
         for ($i = 0; $i < count($payments); $i++) {
             // Only projected payments can be missed
             if ($payments[$i]->get_payment_class_as_int() !== 2) {
                 continue;
             }
-            
+
             //Payment is projected, has it been missed?
             if ($payments[$i]->get_payment_date() < $now) {
                 // Add a missed payment to the account
@@ -224,16 +231,16 @@ class Amortization {
         }
         return $payments;
     }
-    
+
     /**
      * Reprocesses all payments
      * 
      * @param array $payments
      * @return array
      */
-    private function reprocess_payments(Array $payments) : Array {
+    private function reprocess_payments(Array $payments): Array {
         $principal = $this->account->get_loan_principal();
-        foreach($payments as $payment) {
+        foreach ($payments as $payment) {
             $payment->compute_payment($principal, $payment->get_is_principal_payment());
             $principal = $payment->get_ending_principal();
         }
@@ -247,7 +254,7 @@ class Amortization {
      * @param type $account_id
      * @return Array Containing Payment class for each real payment
      */
-    private function get_real_payments() {
+    private function get_real_payments() : Array {
         $db_connection = Database::connect();
         $principal = $this->account->get_loan_principal();
         $account_id = $this->account->get_account_id();
@@ -282,7 +289,7 @@ class Amortization {
      * @param int $months
      * @return DateTime Updated DateTime with $months added
      */
-    private function add_months(DateTime $dt, int $months) : DateTime {
+    private function add_months(DateTime $dt, int $months): DateTime {
         $date = new DateTime($dt->format("Y-m-d"));
         $day = $date->format('j');
         $date->modify("first day of +$months month");
@@ -290,5 +297,9 @@ class Amortization {
 
         return $date;
     }
+    
+    /**********************************************************************
+     * END CLASS METHODS
+     **********************************************************************/
 
 }
