@@ -57,7 +57,7 @@
                                 <ul class="collapse">
                                     <li class="active"><a href="list_accounts">View Accounts</a></li>
                                     <li><a href="index2.html">Add Account</a></li>
-                                    <li><a href="index3.html">Add Payment</a></li>
+                                    <li><a href="add_payment">Add Payment</a></li>
                                 </ul>
                             </li>
                             <li>

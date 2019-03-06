@@ -41,6 +41,10 @@ $return_data['start_date'] = $account->get_loan_start_date()->format("m-d-Y");
 $return_data['rate'] = $account->get_loan_rate();
 $return_data['missed_payments'] = $account->get_missed_payments();
 $return_data['late_charges'] = $account->get_current_missed_payments() * $account->get_late_charge();
+$return_data['account_id'] = $id;
+$return_data['minimum_payment'] = round(($account->get_current_missed_payments() * $account->get_late_charge()) + 
+        $account->get_loan_monthly_payment(),2);
+
 
 foreach ($payments as $payment) {
 

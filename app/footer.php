@@ -222,6 +222,9 @@
 <script src="../app/assets/js/plugins.js"></script>
 <script src="../app/assets/js/scripts.js"></script>
 <script src="../app/assets/js/logout.js"></script>
+<script src="../app/assets/js/vendor/jquery.validate.min.js"></script>
+<script src="../app/assets/js/vendor/additional-methods.min.js"></script>
+<script src="../app/assets/js/form_validation.js"></script>
 </body>
 
 </html>

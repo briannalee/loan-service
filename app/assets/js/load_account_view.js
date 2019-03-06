@@ -31,6 +31,13 @@ function LoadAccountView(id) {
                 $("#rate").text(data["rate"]);
                 $("#missed_payments").text(data["missed_payments"]);
                 $("#late_charges").text(data["late_charges"]);
+                $("#payment_account_id").text(data["account_id"]);
+                $("#payment_account_last_name").text(data["last_name"]);
+                $("#payment_account_monthly_payment").text(data["monthly_payment"]);
+                $("#payment_minimum_payment").text(data["minimum_payment"]);
+                $("#payment_account_late_charges").text(data["late_charges"]);
+                $("#payment_account_current_balance").text(data["current_balance"]);
+                $("#add_payment_submit").attr("onclick","AddPayment("+id+"); return false;");
 
                 // activate the account detail tab
                 activateTab("account_detail");

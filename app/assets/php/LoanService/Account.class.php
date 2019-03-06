@@ -23,7 +23,7 @@ class Account {
     private $missed_payments;
     private $current_missed_payments;
     private $current_balance;
-    private $late_charge;
+    private $late_charge = 50;
     
     /**
      * 
@@ -124,7 +124,7 @@ class Account {
         $this->current_missed_payments--;
     }
 
-    public function get_amortization(): Amortization {
+    public function get_amortization() : Amortization {
         return $this->amortization;
     }
 
