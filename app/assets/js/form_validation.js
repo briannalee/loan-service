@@ -12,4 +12,9 @@ $(document).ready(function () {
         }
     });
 
+    $('#add_account_form').validate({// initialize the plugin
+
+        rules: {
+        }
+    });
 });

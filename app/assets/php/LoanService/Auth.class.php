@@ -8,7 +8,7 @@ namespace LoanService;
  * @author brianna
  */
 class Auth {
-
+    
     /**
      * authenticate
      * 
@@ -60,7 +60,7 @@ class Auth {
 
             if (password_verify($password, $row['password'])) {
                 $_SESSION['login_id'] = $row['id'];
-
+                $_SESSION['last_name'] = $row['last_name'];
                 return true;
             } else {
                 return false;
@@ -74,5 +74,4 @@ class Auth {
 
         mysqli_close($dbConnection);
     }
-
 }
