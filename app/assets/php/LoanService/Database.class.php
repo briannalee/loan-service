@@ -1,6 +1,7 @@
 <?php
 
 namespace LoanService;
+use mysqli;
 
 /**
  * Provides database connectivity

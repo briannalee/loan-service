@@ -205,7 +205,7 @@
                                 <label for="payment_amount" generated="true" class="error text-danger"></label>
                                 <div class="form-group">
                                     <label for="payment_date" class="col-form-label">Payment Date</label>
-                                    <input class="form-control col-4" type="date" id="payment_date" name=="payment_date" required="">
+                                    <input class="form-control col-4" type="date" id="payment_date" name="payment_date" required>
                                     <label for="payment_date" generated="true" class="error text-danger"></label>
 
                                 </div>

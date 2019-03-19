@@ -187,7 +187,13 @@ class Payment {
         $rate = $this->account->get_loan_rate();
         $payment = [];
         $this->desired_interest_payment = round($principal * (($rate / 100) / 12), 2);
-
+        
+        //If it's a projected payment, payment amount is always the monthly payment
+        if ($this->get_payment_class_as_int() === 2) {
+            $payment_amount = $this->account->get_loan_monthly_payment();
+            $this->desired_payment = $this->account->get_loan_monthly_payment();
+        }
+        
         if ($payment_amount < $this->desired_interest_payment) {
             $interest_payment = $payment_amount;
             if ($payment_amount > 0) {
@@ -223,6 +229,7 @@ class Payment {
     private function calculate_overpayment(float $principal, float $principal_payment, float $payment_amount) : Array {
         // Is our payment amount higher than what we owe?
         if ($principal_payment > $principal) {
+            
             // We need to reduce our payment amount to match
             //remove the excess principal payment, but keep interest payment the same
             $payment_amount = round($payment_amount - ($principal_payment - $principal), 2);
