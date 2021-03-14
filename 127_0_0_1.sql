@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
 --
 
 INSERT INTO `admin_users` (`id`, `first_name`, `last_name`, `email`, `password`) VALUES
-(1, '', '', 'mail@brianna.cc', '$2y$10$Rxkn4qBTyFtNgzuOdDoODuIwruL24bZY/u7JulTYZbbjLpPSupkXO');
+(1, '', '', 'admin', 'password');
 
 -- --------------------------------------------------------
 
