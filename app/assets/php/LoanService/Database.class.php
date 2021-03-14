@@ -12,7 +12,7 @@ class Database {
 
     const SERVERNAME = 'localhost';
     const USERNAME = 'database_user';
-    const PASSWORD = 'Yba4kXS8h$Ip#19D89$5%Wd1AM4kl!2zmzo2';
+    const PASSWORD = 'database_password';
     const DATABASE = 'loan-service';
 
     /**
